@@ -33,7 +33,8 @@ INSTALLED_APPS = [
 ]
 
 # Add crispy form template pack setting
-CRISPY_TEMPLATE_PACK = 'bootstrap4'  # Use 'bootstrap3' or 'bootstrap5' if preferred
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# Use 'bootstrap3' or 'bootstrap5' if preferred
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -102,7 +103,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # This folder will collect all static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# This folder will collect all static files for production
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # Points to 'static' folder in your project directory
@@ -120,7 +122,6 @@ SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
 
 # Stripe settings loaded from environment variables
-STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_TEST_PUBLISHABLE_KEY', 'pk_test_51REAfOP2q9gnJOlx6tMxhQoTL4ViWASLlHsJZ6vCQ5wMoraV7RSDp8mOrNa5xjzCea1RMDrlR6SFacl6P8aN76rP00cf4uuLzj')
-STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_SECRET_KEY', 'sk_test_51REAfOP2q9gnJOlxNQowmuGOpshPNHc6W2nKlTNuByf4cu0k530W5TEEJgFr9e3ngn5F8e4m1jiSkhqSG0vOFlLd00bnSRLbCb')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET', 'whsec_your_webhook_secret')  # Optional, for webhook security
-
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_TEST_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
