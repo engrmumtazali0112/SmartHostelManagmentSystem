@@ -4,6 +4,67 @@ A comprehensive solution for managing hostel operations, including room allocati
 
 ## 🎥 Demo
 
+# Smart Hostel Management System 🏢
+
+A comprehensive solution for managing hostel operations, including room allocation, mess management, and complaint handling.
+
+## 🎥 Demo
+
+### Admin Dashboard and Management
+
+![AdminAddMessMenu](Demo/Screenshot/AdminAddMessMenu.png)
+- Admin adds new menu items in the hostel mess system.
+
+![AdminAddShowcaseNotice](Demo/Screenshot/AdminaddShowcasenotice.png)
+- Admin can showcase notices related to hostel management.
+
+![AdminComplaint](Demo/Screenshot/AdminComplaint.png)
+- Admin manages complaints received from students.
+
+![AdminRoomList](Demo/Screenshot/AdminRoomList.png)
+- Admin manages room listings for the hostel.
+
+### Hostel Management Features
+
+![AdminDashboard](Demo/Screenshot/AdminDashboard.png)
+- The main dashboard showcasing hostel and student data.
+
+![AdminHostel](Demo/Screenshot/AdminHostel.png)
+- Admin oversees hostel assignments and management.
+
+![AdminMessMemberShip](Demo/Screenshot/AdminMessMemberShip.png)
+- Manage mess membership and attendance for students.
+
+### Student Requests and Management
+
+![AdminStudentFeeManage](Demo/Screenshot/AdminStudentFeeManage.png)
+- Admin manages the student fee structure.
+
+![AdminStudentPaymentRequest](Demo/Screenshot/AdminStudentPaymentRequest.png)
+- Handles requests related to student payments.
+
+![AdminVisitorManagement](Demo/Screenshot/AdminVisitorManagement.png)
+- Admin manages visitor records and entries.
+
+### Student Dashboard
+
+![StudentDashboard](Demo/Screenshot/StudentDashboard.png)
+- Student's personalized dashboard for tracking their activities.
+
+![StdProfile](Demo/Screenshot/StdProfile.png)
+- Students can view and update their personal profile information.
+
+![StdRequestPaymenthistory](Demo/Screenshot/StdRequestPaymenthistory.png)
+- Students can view their payment history and request payments.
+
+### Miscellaneous
+
+![StdComplaints](Demo/Screenshot/StdComplaints.png)
+- Students can submit complaints through this interface.
+
+![SubmitComplaints](Demo/Screenshot/SubmitComplaints.png)
+- Interface for submitting complaints.
+
 
 
 
