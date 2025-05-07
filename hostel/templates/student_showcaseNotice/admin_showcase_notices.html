@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="showcase-notices-container">
+    <div class="notices-header">
+        <h1>Disciplinary Notices Management</h1>
+        <div class="notices-stats">
+            <div class="stat-box">
+                <span class="stat-value">{{ notices|length }}</span>
+                <span class="stat-label">Total Notices</span>
+            </div>
+            {% if unread_showcase_notices %}
+            <div class="stat-box warning">
+                <span class="stat-value">{{ unread_showcase_notices }}</span>
+                <span class="stat-label">Unread</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Manage Notices</h5>
+            <a href="{% url 'create_showcase_notice' %}" class="btn btn-light btn-sm">
+                <i class="fas fa-plus"></i> Create Notice
+            </a>
+        </div>
+        <div class="card-body">
+            {% if notices %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Student</th>
+                                <th>Created</th>
+                                <th>Students</th>
+                                <th>Unread</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for notice in notices %}
+                                <tr>
+                                    <td>{{ notice.get_notice_type_display }}</td>
+                                    <td>
+                                        {% for student_notice in notice.studentshowcasenotice_set.all|slice:":3" %}
+                                            {{ student_notice.student.user.get_full_name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                        {% if notice.studentshowcasenotice_set.count > 3 %}
+                                            and {{ notice.studentshowcasenotice_set.count|add:"-3" }} more
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ notice.created_date|date:"M d, Y" }}</td>
+                                    <td>{{ notice.students.count }}</td>
+                                    <td>
+                                        {{ notice.studentshowcasenotice_set.filter.read|yesno:",True"|length }}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'view_showcase_notice' notice.id %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'edit_showcase_notice' notice.id %}" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'delete_showcase_notice' notice.id %}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-notices">
+                    <div class="empty-illustration">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h2>No Notices Created</h2>
+                    <p>There are no disciplinary notices in the system. Click the 'Create Notice' button to add one.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

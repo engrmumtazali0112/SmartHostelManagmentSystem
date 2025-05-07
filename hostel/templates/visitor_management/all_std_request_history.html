@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}My Visitor Requests{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-6">My Visitor Requests</h2>
+
+    {% if requests %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+                <thead class="bg-blue-600 text-white">
+                    <tr>
+                        <th class="px-6 py-3 text-left uppercase tracking-wider">Visitor Name</th>
+                        <th class="px-6 py-3 text-left uppercase tracking-wider">Contact Info</th>
+                        <th class="px-6 py-3 text-left uppercase tracking-wider">ID Proof</th>
+                        <th class="px-6 py-3 text-left uppercase tracking-wider">Purpose of Visit</th>
+                        <th class="px-6 py-3 text-left uppercase tracking-wider">Request Date</th>
+                        <th class="px-6 py-3 text-left uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for request in requests %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="px-6 py-4 whitespace-nowrap">{{ request.visitor.name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ request.visitor.contact_info }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ request.visitor.Visitor_ID_Proof }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ request.visitor.purpose_of_visit }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ request.request_date|date:"Y-m-d H:i" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if request.status == 'PENDING' %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                            {% elif request.status == 'APPROVED' %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                            {% elif request.status == 'REJECTED' %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-600">You have no visitor requests yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

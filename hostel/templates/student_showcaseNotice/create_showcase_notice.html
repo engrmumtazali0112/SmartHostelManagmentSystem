@@ -1,0 +1,184 @@
+<!-- templates/student_showcaseNotice/create_showcase_notice.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Create Disciplinary Notice</h2>
+
+<!-- Form Container -->
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <div class="form-actions">
+            <!-- Create Notice Button -->
+            <button type="submit" class="btn btn-primary">Create Notice</button>
+
+            <!-- Back Button to all notices -->
+            <a href="{% url 'admin_showcase_notices' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Notices
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Include Select2 styles and scripts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2
+        $('.select2').select2({
+            ajax: {
+                url: '{% url "search_students" %}',  // URL for student search view
+                dataType: 'json',
+                delay: 250,  // Delay for typing before searching
+                data: function (params) {
+                    return {
+                        q: params.term // Search query
+                    };
+                },
+                processResults: function (data) {
+                    // Return data formatted for Select2 with full name and registration number
+                    return {
+                        results: data.students.map(function (student) {
+                            return {
+                                id: student.id,
+                                text: student.full_name + ' - ' + student.registration_number // Use real name
+                            };
+                        })
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Search for a student...',
+            minimumInputLength: 2  // Minimum characters before search starts
+        });
+    });
+</script>
+
+<!-- Internal CSS styles -->
+<style>
+    /* Page Container */
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Heading */
+    h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    /* Form Styling */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        font-size: 1rem;
+        color: #34495e;
+        font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-sizing: border-box;
+        margin-top: 0.5rem;
+        transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #3498db;
+    }
+
+    /* Button Styling */
+    .btn {
+        display: inline-block;
+        background-color: #3498db;
+        color: white;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #2980b9;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Select2 Customization */
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-selection {
+        height: 38px;
+        border-radius: 6px;
+    }
+
+    .select2-selection__rendered {
+        padding: 5px 10px;
+    }
+
+    .select2-search__field {
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+    }
+
+    /* Form Action Buttons Styling */
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+{% endblock %}

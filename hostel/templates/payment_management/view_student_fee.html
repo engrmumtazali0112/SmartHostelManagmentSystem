@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Payment Request Submission Details</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th>Student Name</th>
+                    <td>{{ payment_request.student.F_Name }} {{ payment_request.student.L_Name }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{ payment_request.transaction_id }}</td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td>Rs{{ payment_request.amount }}</td>
+                </tr>
+                <tr>
+                    <th>Bank</th>
+                    <td>{{ payment_request.bank_name }}</td>
+                </tr>
+                <tr>
+                    <th>Payment Date</th>
+                    <td>{{ payment_request.transaction_date }}</td>
+                </tr>
+                <tr>
+                    <th>Payment Mode</th>
+                    <td>{{ payment_request.payment_mode }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ payment_request.status }}</td>
+                </tr>
+                <tr>
+                    <th>Notes</th>
+                    <td>{{ payment_request.notes }}</td>
+                </tr>
+                {% if payment_request.proof_document %}
+                <tr>
+                    <th>Proof Document</th>
+                    <td><img src="{{ payment_request.proof_document.url }}" alt="Proof Document" style="max-width: 300px; max-height: 300px;"></td>
+                </tr>
+                {% endif %}
+            </table>
+            <div class="text-center">
+                <a href="{% url 'admin_payment_requests' %}" class="btn btn-back">Back to Payment Requests</a>
+                {% if payment_request.status == 'PENDING' %}
+                <form method="post" action="{% url 'process_payment_request' payment_request.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                    <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

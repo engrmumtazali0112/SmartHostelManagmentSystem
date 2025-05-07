@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitor Request{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-2xl font-semibold text-gray-900">Request a New Visitor</h1>
+        <p class="mt-2 text-gray-600">Please enter the details of the visitor below.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Visitor Name Input -->
+            <div class="mb-4">
+                <label for="visitor_name" class="block text-gray-700 font-medium">Visitor Name:</label>
+                <input type="text" id="visitor_name" name="visitor_name" class="mt-2 w-full p-3 border rounded-md" required>
+            </div>
+        
+            <!-- Visitor Contact Info Input -->
+            <div class="mb-4">
+                <label for="contact_info" class="block text-gray-700 font-medium">Contact Info:</label>
+                <input type="text" id="contact_info" name="contact_info" class="mt-2 w-full p-3 border rounded-md" required>
+            </div>
+
+            <!-- Visitor CNIC Input -->
+            <div class="mb-4">
+                <label for="cnic" class="block text-gray-700 font-medium">Visitor CNIC:</label>
+                <input type="text" id="cnic" name="cnic" class="mt-2 w-full p-3 border rounded-md" required>
+            </div>
+        
+            <!-- Purpose of Visit Input -->
+            <div class="mb-4">
+                <label for="purpose_of_visit" class="block text-gray-700 font-medium">Purpose of Visit:</label>
+                <input type="text" id="purpose_of_visit" name="purpose_of_visit" class="mt-2 w-full p-3 border rounded-md" required>
+            </div>
+        
+            <!-- Time In Input -->
+            <div class="mb-4">
+                <label for="time_in" class="block text-gray-700 font-medium">Time In:</label>
+                <input type="datetime-local" id="time_in" name="time_in" class="mt-2 w-full p-3 border rounded-md" required>
+            </div>
+        
+            <!-- Time Out Input -->
+            <div class="mb-4">
+                <label for="time_out" class="block text-gray-700 font-medium">Time Out:</label>
+                <input type="datetime-local" id="time_out" name="time_out" class="mt-2 w-full p-3 border rounded-md" required>
+            </div>
+        
+            <!-- Hidden Student ID (using logged-in student) -->
+            <input type="hidden" name="student_id" value="{{ request.user.student.Student_ID }}">
+            
+            <div class="alert alert-info">
+                <h5>Hostel Visitor Policy</h5>
+                <ul>
+                    <li>All visitors must be approved by hostel administration</li>
+                    <li>Visitors are allowed only during designated hours (8:00 AM - 8:00 PM)</li>
+                    <li>Visitors must carry valid ID proof at all times</li>
+                    <li>Maximum visit duration is 7 days</li>
+                </ul>
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="w-full py-3 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">
+                    Submit Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

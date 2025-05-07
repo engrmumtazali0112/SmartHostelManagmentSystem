@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Enroll Fingerprint{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="display-5 fw-bold mb-4">Enroll Your Fingerprint</h1>
+    <p>To mark attendance, please enroll your fingerprint below.</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="d-grid gap-2 col-md-6 mx-auto">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-fingerprint me-2"></i>Enroll Fingerprint
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

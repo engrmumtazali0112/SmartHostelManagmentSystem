@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Mess Menu{% endblock %}
+
+{% block content %}
+<style>
+    /* Card styling */
+    .card {
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 25px;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+        padding: 15px 20px;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(to right, #4e73df, #224abe);
+    }
+    
+    .bg-gradient-success {
+        background: linear-gradient(to right, #1cc88a, #13855c);
+    }
+    
+    /* Form styling */
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #d1d3e2;
+        padding: 10px 15px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 6px;
+    }
+    
+    .form-text {
+        color: #858796;
+    }
+    
+    /* Button styling */
+    .btn {
+        border-radius: 6px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+    
+    .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background-color: #858796;
+        border-color: #858796;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #717384;
+        border-color: #6c6e7c;
+        transform: translateY(-2px);
+    }
+    
+    .btn-success {
+        background-color: #1cc88a;
+        border-color: #1cc88a;
+    }
+    
+    .btn-success:hover {
+        background-color: #17a673;
+        border-color: #169b6b;
+        transform: translateY(-2px);
+    }
+    
+    /* Custom checkbox styling */
+    .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+    
+    /* Alert styling */
+    .alert-success {
+        background-color: #e6f8f3;
+        border-color: #b7edd5;
+        color: #0f6848;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+        }
+        
+        .form-row > div {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-utensils mr-2"></i>Add Mess Menu Item
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'add_mess_menu' %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="date">Date:</label>
+                                <input type="date" id="date" name="date" class="form-control" required>
+                                <small class="form-text text-muted">Day of week will be auto-calculated</small>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="meal_time">Meal Time:</label>
+                                <select id="meal_time" name="meal_time" class="form-control" required>
+                                    {% for meal_code, meal_name in meal_choices %}
+                                    <option value="{{ meal_code }}">{{ meal_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dish_name">Dish Name(s):</label>
+                            <textarea id="dish_name" name="dish_name" class="form-control" rows="4" placeholder="Enter dish names separated by commas or line breaks" required></textarea>
+                            <small class="form-text text-muted">List multiple dishes separated by commas (e.g., Rice, Dal, Chicken Curry, Salad)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="price">Price (optional):</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Rs</span>
+                                </div>
+                                <input type="number" id="price" name="price" class="form-control" step="0.01" min="0" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="week_number">Week Number:</label>
+                                <input type="number" id="week_number" name="week_number" class="form-control" min="1" max="53" readonly>
+                                <small class="form-text text-muted">Auto-calculated from date</small>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="month">Month:</label>
+                                <input type="text" id="month" name="month" class="form-control" readonly>
+                                <small class="form-text text-muted">Auto-calculated from date</small>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="year">Year:</label>
+                                <input type="number" id="year" name="year" class="form-control" readonly>
+                                <small class="form-text text-muted">Auto-calculated from date</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-4 text-center">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save mr-2"></i>Save Menu Item
+                            </button>
+                            <a href="{% url 'view_mess_menu' %}" class="btn btn-secondary ml-2">
+                                <i class="fas fa-arrow-left mr-2"></i>Back to Menu Management
+                            </a>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Quick Add Multiple Days Section -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-gradient-success text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-calendar-plus mr-2"></i>Quick Add for Multiple Days
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'add_multiple_menu_items' %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="start_date">Start Date:</label>
+                                <input type="date" id="start_date" name="start_date" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="end_date">End Date:</label>
+                                <input type="date" id="end_date" name="end_date" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Days to Include:</label>
+                            <div class="d-flex flex-wrap">
+                                {% for day_code, day_name in day_choices %}
+                                <div class="custom-control custom-checkbox mr-3 mb-2">
+                                    <input type="checkbox" class="custom-control-input" id="day_{{ day_code }}" name="days" value="{{ day_code }}" checked>
+                                    <label class="custom-control-label" for="day_{{ day_code }}">{{ day_name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="multi_meal_time">Meal Time:</label>
+                            <select id="multi_meal_time" name="meal_time" class="form-control" required>
+                                {% for meal_code, meal_name in meal_choices %}
+                                <option value="{{ meal_code }}">{{ meal_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="multi_dish_name">Dish Name(s):</label>
+                            <textarea id="multi_dish_name" name="dish_name" class="form-control" rows="4" placeholder="Enter dish names separated by commas or line breaks" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="multi_price">Price (optional):</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Rs</span>
+                                </div>
+                                <input type="number" id="multi_price" name="price" class="form-control" step="0.01" min="0" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="fas fa-calendar-check mr-2"></i>Add for Multiple Days
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Set default date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById('date').value = today;
+        document.getElementById('start_date').value = today;
+        
+        // Calculate end date (7 days from today)
+        var endDate = new Date();
+        endDate.setDate(endDate.getDate() + 6);
+        var end_dd = String(endDate.getDate()).padStart(2, '0');
+        var end_mm = String(endDate.getMonth() + 1).padStart(2, '0');
+        var end_yyyy = endDate.getFullYear();
+        
+        endDateStr = end_yyyy + '-' + end_mm + '-' + end_dd;
+        document.getElementById('end_date').value = endDateStr;
+        
+        // Auto-calculate week, month, year from selected date
+        updateDateMetadata();
+        
+        // Add event listener to update metadata when date changes
+        document.getElementById('date').addEventListener('change', updateDateMetadata);
+    });
+    
+    function updateDateMetadata() {
+        var dateInput = document.getElementById('date').value;
+        if (dateInput) {
+            var selectedDate = new Date(dateInput);
+            
+            // Calculate week number
+            // ISO week calculation (simplified)
+            var d = new Date(selectedDate);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+            var week = Math.floor((d.getTime() - new Date(d.getFullYear(), 0, 4).getTime()) / 86400000 / 7) + 1;
+            
+            // Set month
+            var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            var month = monthNames[selectedDate.getMonth()];
+            
+            // Set year
+            var year = selectedDate.getFullYear();
+            
+            // Update form fields
+            document.getElementById('week_number').value = week;
+            document.getElementById('month').value = month;
+            document.getElementById('year').value = year;
+        }
+    }
+</script>
+{% endblock %}

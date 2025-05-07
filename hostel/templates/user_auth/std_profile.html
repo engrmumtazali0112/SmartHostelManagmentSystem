@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .container {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background-color: #f7f7f7;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #2563eb;
+        color: white;
+        padding: 1rem;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .profile-header img {
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border: 2px solid white;
+    }
+
+    .profile-header .name {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    .section {
+        display: flex;
+        justify-content: space-between;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .info-section {
+        width: 48%;
+    }
+
+    .info-section h2 {
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #34495e;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #ecf0f1;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .info-label {
+        color: #95a5a6;
+        font-weight: 500;
+        flex: 1;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #2c3e50;
+        text-transform: capitalize;
+        flex: 2;
+        text-align: right;
+    }
+
+    .fee-status {
+        font-weight: 600;
+        flex: 2;
+        text-align: right;
+    }
+
+    .status-green {
+        color: #27ae60;
+    }
+
+    .status-red {
+        color: #e74c3c;
+    }
+
+    .status-orange {
+        color: #f39c12;
+    }
+
+    .status-gray {
+        color: #7f8c8d;
+    }
+
+    /* Notices section */
+    .notices-section {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .notices-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .notice-item {
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        border-left: 3px solid #2563eb;
+        background: #f8f9fa;
+    }
+
+    .notice-date {
+        font-size: 0.8rem;
+        color: #95a5a6;
+    }
+
+    /* Mess Fee Section Styles */
+    .mess-fee-section {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .mess-fee-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .mess-fee-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .mess-fee-header i {
+        margin-right: 0.5rem;
+        color: #2563eb;
+    }
+
+    .mess-fee-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .mess-fee-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        border-left: 3px solid #2563eb;
+    }
+
+    .mess-fee-card p:first-child {
+        color: #95a5a6;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .mess-fee-card p:last-child {
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: #2c3e50;
+    }
+
+    .remaining-due {
+        color: #e74c3c !important;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            margin: 1rem;
+            padding: 1rem;
+        }
+
+        .section {
+            flex-direction: column;
+        }
+
+        .info-section {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .info-item {
+            flex-direction: column;
+        }
+
+        .info-value, .fee-status {
+            text-align: left;
+            margin-top: 0.5rem;
+        }
+
+        .mess-fee-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="profile-header">
+        <div class="name">{{ student.F_Name }} {{ student.L_Name }}</div>
+        {% if student.profile_picture %}
+            <img src="{{ student.profile_picture.url }}" alt="Profile Picture">
+        {% else %}
+            <img src="{% static 'images/default-avatar.png' %}" alt="Default Profile Picture">
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <div class="info-section">
+            <h2>Personal Information</h2>
+            <div class="info-item">
+                <span class="info-label">Registration Number</span>
+                <span class="info-value">{{ student.Registration_Number }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Father's Name</span>
+                <span class="info-value">{{ student.FatherName }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">{{ student.user.email }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Contact</span>
+                <span class="info-value">{{ student.Contact_Info }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Address</span>
+                <span class="info-value">{{ student.Address }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Department</span>
+                <span class="info-value">{{ student.Department }}</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>Hostel Information</h2>
+            <div class="info-item">
+                <span class="info-label">Hostel Name</span>
+                <span class="info-value">{{ student.Hostel_ID.Hostel_Name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Room Number</span>
+                <span class="info-value">{{ student.Room_ID.Room_No }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Room Type</span>
+                <span class="info-value">{{ student.Room_ID.Room_Type }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Floor Number</span>
+                <span class="info-value">{{ student.Room_ID.Floor_No }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hostel Fee Information Section -->
+    <div class="section">
+        <div class="info-section" style="width: 100%;">
+            <h2>Hostel Fee Information</h2>
+            {% for label, value, color in fee_status_info %}
+            <div class="info-item">
+                <span class="info-label">{{ label }}</span>
+                <span class="fee-status status-{{ color }}">{{ value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Mess Fee Information Section -->
+    <div class="mess-fee-section">
+        <div class="mess-fee-header">
+            <i class="fas fa-utensils"></i>
+            <h2>Mess Fee Information</h2>
+        </div>
+        
+        <div class="mess-fee-grid">
+            <div class="mess-fee-card">
+                <p>Total Mess Cost</p>
+                <p>Rs {{ mess_fee_status.total_cost|floatformat:2 }}</p>
+            </div>
+            <div class="mess-fee-card">
+                <p>Total Paid</p>
+                <p>Rs {{ mess_fee_status.total_paid|floatformat:2 }}</p>
+            </div>
+            <div class="mess-fee-card">
+                <p>Remaining Due</p>
+                <p class="{% if mess_fee_status.remaining_due > 0 %}remaining-due{% endif %}">
+                    Rs {{ mess_fee_status.remaining_due|floatformat:2 }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+{% endblock %}

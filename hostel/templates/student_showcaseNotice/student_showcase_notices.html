@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">My Disciplinary Notices</h5>
+        </div>
+        <div class="card-body">
+            {% if student_notices %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Paid Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student_notice in student_notices %}
+                                <tr {% if not student_notice.read %}class="table-warning"{% endif %}>
+                                    <td>{{ student_notice.notice.title }}</td>
+                                    <td>
+                                        <span class="badge {% if student_notice.notice.notice_type == 'fine' %}bg-danger{% elif student_notice.notice.notice_type == 'noise' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ student_notice.notice.get_notice_type_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ student_notice.notice.created_date|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if student_notice.read %}
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Read</span>
+                                        {% else %}
+                                            <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Unread</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if student_notice.paid %}
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Paid</span>
+                                        {% else %}
+                                            <span class="text-danger"><i class="fas fa-times-circle"></i> Unpaid</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'view_student_showcase_notice' student_notice.notice.id %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% if user.is_staff %}
+                                            <!-- Admin Option to Mark as Paid -->
+                                            {% if not student_notice.paid %}
+                                                <a href="{% url 'mark_notice_paid' student_notice.id %}" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-money-check-alt"></i> Mark as Paid
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    You have no disciplinary notices.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Disciplinary Notices Styling */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #f2f2f2;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 1rem 0.75rem;
+    }
+
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+    }
+
+    .btn-info {
+        color: #ffffff;
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #138496;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .table-warning {
+        background-color: #fff8e1;
+    }
+
+    .alert-info {
+        background-color: #e7f3fe;
+        color: #31708f;
+        border-color: #b8daff;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .card-header {
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .table td {
+            padding: 0.75rem 0.5rem;
+        }
+
+        .table thead th {
+            font-size: 0.875rem;
+        }
+    }
+</style>
+
+{% endblock %}

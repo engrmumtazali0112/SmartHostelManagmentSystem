@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}View Notice - {{ notice.Title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/notice-detail-styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/notice-detail-additional-styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card notice-card shadow-lg">
+                <div class="card-header bg-gradient-info">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn mr-2"></i>
+                        {{ notice.Title }}
+                    </h3>
+                    <div class="card-tools">
+                        <div class="date-info">
+                            <span class="badge date-badge posted-date">
+                                <i class="far fa-calendar-alt mr-1"></i> Posted: {{ notice.Created_At|date:"M d, Y" }}
+                            </span>
+                            {% if notice.Expiry_Date %}
+                            <span class="badge date-badge expiry-date">
+                                <i class="fas fa-clock mr-1"></i> Expires: {{ notice.Expiry_Date|date:"M d, Y" }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="notice-content">
+                        {{ notice.Content|linebreaks }}
+                    </div>
+                    <div class="notice-meta mt-4">
+                        <p class="user-info">
+                            <i class="fas fa-user-shield mr-1"></i> <strong>Posted by:</strong> {{ notice.Admin_ID.Name }}
+                        </p>
+                        {% if notice.Category %}
+                        <p>
+                            <i class="fas fa-tag mr-1"></i> <strong>Category:</strong> {{ notice.Category }}
+                        </p>
+                        {% endif %}
+                        {% if notice.Priority %}
+                        <p>
+                            <i class="fas fa-exclamation-circle mr-1"></i> <strong>Priority:</strong>
+                             <span class="badge {% if notice.Priority == 'High' %}badge-danger{% elif notice.Priority == 'Medium' %}badge-warning{% else %}badge-info{% endif %}">
+                                {{ notice.Priority }}
+                            </span>
+                        </p>
+                        {% endif %}
+                    </div>
+                    {% if notice.Attachments.all %}
+                    <div class="notice-attachments mt-4">
+                        <h5><i class="fas fa-paperclip mr-2"></i>Attachments</h5>
+                        <div class="attachment-list">
+                            {% for attachment in notice.Attachments.all %}
+                            <a href="{{ attachment.file.url }}" class="attachment-item" download>
+                                <i class="fas fa-file mr-2"></i>{{ attachment.filename }}
+                                <span class="attachment-size">({{ attachment.file.size|filesizeformat }})</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'student_notices' %}" class="btn btn-secondary btn-action">
+                        <i class="fas fa-arrow-left mr-1"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/notice-detail-scripts.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Resolved Showcase Notices (Paid)</h5>
+        </div>
+        <div class="card-body">
+            {% if resolved_notices %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student_notice in resolved_notices %}
+                                <tr class="table-success">
+                                    <td>{{ student_notice.notice.title }}</td>
+                                    <td>
+                                        <span class="badge {% if student_notice.notice.notice_type == 'fine' %}bg-danger{% elif student_notice.notice.notice_type == 'noise' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ student_notice.notice.get_notice_type_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ student_notice.notice.created_date|date:"M d, Y" }}</td>
+                                    <td>
+                                        <span class="text-success"><i class="fas fa-check-circle"></i> Paid</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No resolved notices found.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

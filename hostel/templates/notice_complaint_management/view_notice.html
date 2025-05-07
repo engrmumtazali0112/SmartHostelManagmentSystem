@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}View Notice - {{ notice.Title }}{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card notice-card shadow-lg">
+                <div class="card-header bg-gradient-info">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn mr-2"></i>
+                        {{ notice.Title }}
+                    </h3>
+                    <div class="card-tools">
+                        <div class="date-info">
+                            <span class="badge date-badge posted-date">
+                                <i class="far fa-calendar-alt mr-1"></i> Posted: {{ notice.Created_At|date:"M d, Y" }}
+                            </span>
+                            {% if notice.Expiry_Date %}
+                            <span class="badge date-badge expiry-date">
+                                <i class="fas fa-clock mr-1"></i> Expires: {{ notice.Expiry_Date|date:"M d, Y" }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="notice-content">
+                        {{ notice.Content|linebreaks }}
+                    </div>
+                    <div class="notice-meta mt-4">
+                        <p class="user-info">
+                            <i class="fas fa-user-shield mr-1"></i> <strong>Posted by:</strong> {{ notice.Admin_ID.Name }}
+                        </p>
+                        {% if notice.Category %}
+                        <p>
+                            <i class="fas fa-tag mr-1"></i> <strong>Category:</strong> {{ notice.Category }}
+                        </p>
+                        {% endif %}
+                        {% if notice.Priority %}
+                        <p>
+                            <i class="fas fa-exclamation-circle mr-1"></i> <strong>Priority:</strong> 
+                            <span class="badge {% if notice.Priority == 'High' %}badge-danger{% elif notice.Priority == 'Medium' %}badge-warning{% else %}badge-info{% endif %}">
+                                {{ notice.Priority }}
+                            </span>
+                        </p>
+                        {% endif %}
+                    </div>
+                    {% if notice.Attachments.all %}
+                    <div class="notice-attachments mt-4">
+                        <h5><i class="fas fa-paperclip mr-2"></i>Attachments</h5>
+                        <div class="attachment-list">
+                            {% for attachment in notice.Attachments.all %}
+                            <a href="{{ attachment.file.url }}" class="attachment-item" download>
+                                <i class="fas fa-file mr-2"></i>{{ attachment.filename }}
+                                <span class="attachment-size">({{ attachment.file.size|filesizeformat }})</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'list_of_notices' %}" class="btn btn-secondary btn-action">
+                        <i class="fas fa-arrow-left mr-1"></i> Back
+                    </a>
+                    {% if user.is_staff %}
+                    <div class="float-right">
+                        <a href="{% url 'edit_notice' notice.Notice_ID %}" class="btn btn-primary btn-action">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </a>
+                        <!-- Trigger the modal for delete confirmation -->
+                        <a href="{% url 'delete_notice' notice.Notice_ID %}" class="btn btn-danger btn-action ml-2">
+                            <i class="fas fa-trash mr-1"></i> Delete
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    /* Full height for the wrapper and center content */
+    .content-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f7f9fc;
+        padding: 0;
+        margin: 0;
+    }
+
+    .container-fluid {
+        width: 100%;
+    }
+
+    .notice-card {
+        border-radius: 12px;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        max-width: 650px;
+        width: 100%; /* Ensure the card fills the container */
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #3b76ef, #1e88e5);
+        padding: 1.5rem 2rem;
+        position: relative;
+        color: white;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-title i {
+        margin-right: 10px;
+        font-size: 1.25rem;
+    }
+
+    .date-info {
+        display: flex;
+        gap: 15px;
+        font-size: 0.85rem;
+    }
+
+    .date-badge {
+        padding: 0.4rem 0.75rem;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .posted-date {
+        background-color: #ff5050;
+    }
+
+    .expiry-date {
+        background-color: #ff5050;
+    }
+
+    .date-badge i {
+        margin-right: 5px;
+    }
+
+    .card-body {
+        padding: 2rem;
+        background-color: #ffffff;
+    }
+
+    .notice-content {
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #1e88e5;
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        background-color: #f8f9fa;
+        padding: 1rem 2rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1.25rem;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        font-weight: 500;
+    }
+
+    .btn-secondary {
+        background-color: #78909c;
+    }
+
+    .btn-primary {
+        background-color: #1e88e5;
+    }
+
+    .btn-danger {
+        background-color: #f44336;
+    }
+
+    .btn i {
+        margin-right: 8px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+        color: #78909c;
+    }
+
+    .user-info i {
+        margin-right: 5px;
+    }
+
+    .notice-attachments {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eceff1;
+    }
+
+    .attachment-item {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background-color: #f1f8ff;
+        border: 1px solid #e1e6ef;
+        border-radius: 6px;
+        color: #1e88e5;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .attachment-item:hover {
+        background-color: #e3f2fd;
+        border-color: #bbdefb;
+        text-decoration: none;
+    }
+
+    .attachment-size {
+        color: #90a4ae;
+        margin-left: 5px;
+        font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+        .card-header .card-title {
+            font-size: 1.2rem;
+        }
+
+        .card-footer {
+            flex-direction: column;
+        }
+
+        .float-right {
+            float: none !important;
+            margin-top: 1rem;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}

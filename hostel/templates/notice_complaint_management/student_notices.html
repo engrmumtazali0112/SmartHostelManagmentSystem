@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notice Board{% endblock %}
+
+{% block content %}
+<!-- Link to external CSS file -->
+<link rel="stylesheet" href="{% static 'css/student_notice_board.css' %}">
+
+<!-- Font Awesome if not already in base.html -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="main-content">
+    
+
+    <!-- Alert message (optional) -->
+    {% if show_alert %}
+    <div class="alert alert-info">
+        <p>Here are the latest notices. You can only view them.</p>
+        <button type="button" class="close" onclick="this.parentElement.style.display='none'">
+            <span>&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Original table that will be transformed via JavaScript -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Posted On</th>
+                        <th>Expires</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notice in notices %}
+                    <tr>
+                        <td><a href="{% url 'student_view_notice' notice.Notice_ID %}">{{ notice.Title }}</a></td>
+                        <td>{{ notice.Created_At|date:"Y-m-d" }}</td>
+                        <td>{% if notice.Expiry_Date %}{{ notice.Expiry_Date|date:"Y-m-d" }}{% else %}No expiry{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No notices available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to transform the table into cards -->
+<script src="{% static 'js/student_notice_board.js' %}"></script>
+{% endblock %}

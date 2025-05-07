@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitor Management{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-6">Manage Visitor Requests</h2>
+
+    <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-blue-600 text-white">
+            <tr>
+                <th class="px-6 py-3 text-left uppercase tracking-wider">Visitor</th>
+                <th class="px-6 py-3 text-left uppercase tracking-wider">Student</th>
+                <th class="px-6 py-3 text-left uppercase tracking-wider">Request Date</th>
+                <th class="px-6 py-3 text-left uppercase tracking-wider">Purpose of Visit</th> <!-- Added Purpose of Visit Column -->
+                <th class="px-6 py-3 text-left uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left uppercase tracking-wider">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for request in visitor_requests %}
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap">{{ request.visitor.name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ request.student.F_Name }} {{ request.student.L_Name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ request.request_date|date:"Y-m-d H:i" }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ request.visitor.purpose_of_visit }}</td> <!-- Display Purpose of Visit -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                    {% if request.status == 'PENDING' %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                    {% elif request.status == 'APPROVED' %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                    {% elif request.status == 'REJECTED' %}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <form method="POST" class="flex items-center space-x-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="request_id" value="{{ request.id }}">
+                        <select name="status" class="px-3 py-2 border rounded-md text-sm">
+                            <option value="PENDING" {% if request.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                            <option value="APPROVED" {% if request.status == 'APPROVED' %}selected{% endif %}>Approved</option>
+                            <option value="REJECTED" {% if request.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
+                        </select>
+                        <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background-color: #1e40af;
+    }
+
+    th {
+        color: white;
+        font-size: 1rem;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    td {
+        font-size: 0.875rem;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+    }
+
+    /* Action Button Styling */
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    /* Select Styling */
+    select {
+        padding: 0.25rem 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.875rem;
+    }
+
+    .btn-info {
+        padding: 0.5rem 1rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Table Button Styling */
+    .ml-2 {
+        margin-left: 0.5rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        th, td {
+            font-size: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .btn-info {
+            padding: 0.25rem 0.75rem;
+        }
+
+        .table td {
+            font-size: 0.75rem;
+        }
+    }
+</style>
+
+{% endblock %}

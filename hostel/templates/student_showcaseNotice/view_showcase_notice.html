@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{ notice.get_notice_type_display }}</h5>
+            <span class="badge bg-light text-dark">{{ notice.created_date|date:"M d, Y" }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <!-- Application Format -->
+                <div class="col-md-12">
+                    <h6 class="text-muted mb-2">Notice Description</h6>
+                    <p>{{ notice.description }}</p>
+                </div>
+            </div>
+            
+            {% if notice.fine_amount %}
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-muted mb-2">Fine Amount</h6>
+                    <p class="text-danger font-weight-bold">${{ notice.fine_amount }}</p>
+                </div>
+                {% if notice.due_date %}
+                <div class="col-md-6">
+                    <h6 class="text-muted mb-2">Due Date</h6>
+                    <p>{{ notice.due_date|date:"M d, Y" }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Students List Section -->
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">Students ({{ student_notices.count }})</h6>
+                </div>
+                <div class="card-body">
+                    {% if student_notices %}
+                        <div class="row">
+                            {% for student_notice in student_notices %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">{{ student_notice.student.user.get_full_name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="text-muted mb-2">Read Status:</p>
+                                            <p>
+                                                {% if student_notice.read %}
+                                                    <span class="text-success"><i class="fas fa-check-circle"></i> Read</span>
+                                                {% else %}
+                                                    <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Unread</span>
+                                                {% endif %}
+                                            </p>
+                                            <p class="text-muted mb-2">Read Date:</p>
+                                            <p>
+                                                {% if student_notice.read_date %}
+                                                    {{ student_notice.read_date|date:"M d, Y H:i" }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No students associated with this notice.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-4">
+                <a href="{% url 'edit_showcase_notice' notice.id %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'delete_showcase_notice' notice.id %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+                <a href="{% url 'admin_showcase_notices' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

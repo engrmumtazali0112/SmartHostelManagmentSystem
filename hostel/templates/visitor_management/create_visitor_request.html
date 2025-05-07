@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Visitor Pass{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-lg rounded-lg border-0">
+                <div class="card-header bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                    <h4 class="mb-0">Request Visitor Pass</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.Visitor_Name.id_for_label }}" class="form-label">Visitor Name</label>
+                                {{ form.Visitor_Name }}
+                                {% if form.Visitor_Name.errors %}
+                                <div class="text-danger">{{ form.Visitor_Name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.Visitor_Contact.id_for_label }}" class="form-label">Contact Number</label>
+                                {{ form.Visitor_Contact }}
+                                {% if form.Visitor_Contact.errors %}
+                                <div class="text-danger">{{ form.Visitor_Contact.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.Visitor_ID_Proof.id_for_label }}" class="form-label">ID Proof Number</label>
+                                {{ form.Visitor_ID_Proof }}
+                                {% if form.Visitor_ID_Proof.errors %}
+                                <div class="text-danger">{{ form.Visitor_ID_Proof.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Aadhar, Driving License, etc.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.Relation_With_Student.id_for_label }}" class="form-label">Relation with You</label>
+                                {{ form.Relation_With_Student }}
+                                {% if form.Relation_With_Student.errors %}
+                                <div class="text-danger">{{ form.Relation_With_Student.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.Purpose_Of_Visit.id_for_label }}" class="form-label">Purpose of Visit</label>
+                            {{ form.Purpose_Of_Visit }}
+                            {% if form.Purpose_Of_Visit.errors %}
+                            <div class="text-danger">{{ form.Purpose_Of_Visit.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.Expected_Arrival.id_for_label }}" class="form-label">Expected Arrival</label>
+                                {{ form.Expected_Arrival }}
+                                {% if form.Expected_Arrival.errors %}
+                                <div class="text-danger">{{ form.Expected_Arrival.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.Expected_Departure.id_for_label }}" class="form-label">Expected Departure</label>
+                                {{ form.Expected_Departure }}
+                                {% if form.Expected_Departure.errors %}
+                                <div class="text-danger">{{ form.Expected_Departure.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h5>Hostel Visitor Policy</h5>
+                            <ul>
+                                <li>All visitors must be approved by hostel administration</li>
+                                <li>Visitors are allowed only during designated hours (8:00 AM - 8:00 PM)</li>
+                                <li>Visitors must carry valid ID proof at all times</li>
+                                <li>Maximum visit duration is 7 days</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                            <a href="{% url 'my_visitors' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .card {
+        border-radius: 12px;
+        border: 1px solid #e1e1e1;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #6e7dd1, #575bcf);
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+
+    .form-control:focus {
+        border-color: #6e7dd1;
+        box-shadow: 0 0 5px rgba(110, 125, 209, 0.3);
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
+    .alert-info {
+        border-radius: 10px;
+        background-color: #f7f7f7;
+        border-color: #e1e1e1;
+        padding: 15px;
+    }
+
+    .btn-primary {
+        background-color: #6e7dd1;
+        border: none;
+        border-radius: 30px;
+        font-weight: 600;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 30px;
+        border: 1px solid #6e7dd1;
+        color: #6e7dd1;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6e7dd1;
+        color: white;
+    }
+
+    .btn-sm {
+        font-size: 0.875rem;
+    }
+
+    .d-grid {
+        gap: 10px;
+    }
+
+    .form-text {
+        font-size: 0.875rem;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .alert ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .alert li {
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

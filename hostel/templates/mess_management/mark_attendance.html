@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="display-5 fw-bold mb-4">Mark Today's Attendance</h1>
+    
+    <!-- Assume you have a mechanism for students to select a meal -->
+    <form method="POST" id="attendance-form">
+        {% csrf_token %}
+        <button type="button" class="btn btn-primary" onclick="startFingerprintScan('BF')">Mark Breakfast Attendance</button>
+        <button type="button" class="btn btn-primary" onclick="startFingerprintScan('LN')">Mark Lunch Attendance</button>
+        <button type="button" class="btn btn-primary" onclick="startFingerprintScan('ET')">Mark Tea Break Attendance</button>
+        <button type="button" class="btn btn-primary" onclick="startFingerprintScan('DN')">Mark Dinner Attendance</button>
+    </form>
+</div>
+
+<script>
+function startFingerprintScan(mealCode) {
+    // Assuming the fingerprint capture API is initialized here
+    fingerprintCaptureApi.captureFingerprint(function(fingerprintData) {
+        if (fingerprintData) {
+            // Send fingerprint data to server for verification
+            fetch('/mark-attendance/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    meal_code: mealCode,
+                    fingerprint_data: fingerprintData
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Attendance marked successfully!');
+                  } else {
+                      alert('Fingerprint verification failed!');
+                  }
+              });
+        } else {
+            alert('Fingerprint scan failed. Please try again.');
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Disciplinary Noticrees{% endblock %}
+
+{% block content %}
+<style>
+/* Disciplinary Notices Styling */
+.showcase-notices-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.notices-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 1rem;
+}
+
+.notices-header h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.notices-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat-box {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-3px);
+}
+
+.stat-box.warning {
+  background-color: #fff8e6;
+  border-left: 4px solid #ffb74d;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.stat-box.warning .stat-value {
+  color: #f57c00;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+}
+
+.notices-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.notice-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.notice-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+}
+
+.notice-card.unread {
+  border-left: 4px solid #3498db;
+}
+
+.notice-header {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #f9f9f9;
+}
+
+.notice-title {
+  display: flex;
+  align-items: center;
+}
+
+.notice-title h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  margin-right: 0.75rem;
+}
+
+.unread-badge {
+  background-color: #3498db;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.notice-date {
+  font-size: 0.875rem;
+  color: #95a5a6;
+}
+
+.notice-content {
+  padding: 1.25rem 1.5rem;
+  flex: 1;
+}
+
+.notice-content p {
+  margin: 0;
+  color: #34495e;
+  line-height: 1.5;
+}
+
+.notice-footer {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f0f0f0;
+  background-color: #fcfcfc;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #bdc3c7;
+  color: #7f8c8d;
+}
+
+.btn-outline:hover {
+  background-color: #f5f5f5;
+  color: #34495e;
+}
+
+.btn.disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.empty-notices {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.empty-illustration {
+  font-size: 4rem;
+  color: #3498db;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.empty-notices h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.empty-notices p {
+  color: #7f8c8d;
+  font-size: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .notices-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .notices-stats {
+    width: 100%;
+  }
+  
+  .stat-box {
+    flex: 1;
+  }
+  
+  .notices-list {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div class="showcase-notices-container">
+    <div class="notices-header">
+        <h1>Disciplinary Notices</h1>
+        <div class="notices-stats">
+            <div class="stat-box">
+                <span class="stat-value">{{ notices|length }}</span>
+                <span class="stat-label">Total Notices</span>
+            </div>
+            <div class="stat-box warning">
+                <span class="stat-value">{{ unread_notices }}</span>
+                <span class="stat-label">Unread</span>
+            </div>
+        </div>
+    </div>
+
+    {% if notices %}
+        <div class="notices-list">
+            {% for notice in notices %}
+                <div class="notice-card {% if not notice.is_read %}unread{% endif %}">
+                    <div class="notice-header">
+                        <div class="notice-title">
+                            <h3>{{ notice.title }}</h3>
+                            {% if not notice.is_read %}
+                                <span class="unread-badge">Unread</span>
+                            {% endif %}
+                        </div>
+                        <div class="notice-date">{{ notice.created_at|date:"M d, Y" }}</div>
+                    </div>
+                    <div class="notice-content">
+                        <p>{{ notice.content|truncatewords:30 }}</p>
+                    </div>
+                    <div class="notice-footer">
+                        {% if notice.id %}
+                            <a href="{% url 'student_showcase_notice_detail' notice.id %}" class="btn btn-primary">
+                                View Details
+                            </a>
+                            
+                            {% if not notice.is_read %}
+                                <form method="post" action="{% url 'mark_showcase_notice_read' notice.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline">Mark as Read</button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <!-- If no ID, display disabled buttons or other fallback actions -->
+                            <span class="btn btn-primary disabled">View Details</span>
+                            <span class="btn btn-outline disabled">Mark as Read</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-notices">
+            <div class="empty-illustration">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>No Disciplinary Notices</h2>
+            <p>You have no disciplinary notices at this time.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}  <!-- Load custom filter -->
+
+{% block title %}Mess Menu{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Enhanced Card Styling */
+    .menu-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .menu-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Gradient Header */
+    .menu-header {
+        background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 100%);
+        padding: 1.5rem;
+        position: relative;
+    }
+
+    .menu-header h3 {
+        margin: 0;
+        color: white;
+        font-weight: 600;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-header i {
+        font-size: 1.2em;
+        margin-right: 10px;
+    }
+
+    /* Table Styling */
+    .menu-table {
+        border-radius: 8px;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .menu-table thead th {
+        background: linear-gradient(to right, #3949ab, #5c6bc0);
+        color: white;
+        padding: 1rem;
+        font-weight: 500;
+        border: none;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    .menu-table tbody tr:nth-child(odd) {
+        background-color: #f8f9fa;
+    }
+
+    .menu-table tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .menu-table td {
+        padding: 1rem;
+        border: 1px solid #e9ecef;
+        transition: background-color 0.2s ease;
+    }
+
+    .menu-table tr:hover td {
+        background-color: #f1f8ff;
+    }
+
+    .meal-price {
+        font-size: 0.9rem;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .day-cell {
+        font-weight: 600;
+        color: #343a40;
+        background-color: #e9ecef !important;
+        vertical-align: middle;
+    }
+
+    /* Meal Item Styling */
+    .meal-item {
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .meal-item.breakfast {
+        background-color: #fff8e1;
+        border-left: 4px solid #ffb300;
+    }
+
+    .meal-item.milk-break {
+        background-color: #e8f5e9;
+        border-left: 4px solid #66bb6a;
+    }
+
+    .meal-item.lunch {
+        background-color: #e3f2fd;
+        border-left: 4px solid #42a5f5;
+    }
+
+    .meal-item.evening-tea {
+        background-color: #e8eaf6;
+        border-left: 4px solid #7986cb;
+    }
+
+    .meal-item.dinner {
+        background-color: #fce4ec;
+        border-left: 4px solid #ec407a;
+    }
+
+    .not-specified {
+        color: #adb5bd;
+        font-style: italic;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card menu-card">
+        <div class="card-header menu-header">
+            <h3 class="card-title text-center">
+                <i class="fas fa-utensils"></i>{{ title }}
+            </h3>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table menu-table">
+                <thead>
+                    <tr>
+                        <th style="width: 12%">Day</th>
+                        <th style="width: 18%">Breakfast</th>
+                        <th style="width: 20%">Lunch</th>
+                        <th style="width: 15%">Evening Tea</th>
+                        <th style="width: 20%">Dinner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days_of_week %}
+                    <tr>
+                        <td class="day-cell">{{ day_names|get_item:day }}</td>
+
+                        {% for meal in meal_times %}
+                        <td>
+                            {% with menu_item=structured_menu|get_item:day|get_item:meal %}
+                                {% if menu_item %}
+                                    <div class="meal-item {% if meal == 'BF' %}breakfast{% elif meal == 'LN' %}lunch{% elif meal == 'ET' %}evening-tea{% elif meal == 'DN' %}dinner{% endif %}">
+                                        {{ menu_item.dish_name|safe }}
+                                        <div class="meal-price">Price: Pkr{{ menu_item.price }}</div>
+                                    </div>
+                                {% else %}
+                                    <span class="not-specified">Not specified</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dishCells = document.querySelectorAll('.meal-item');
+        dishCells.forEach(cell => {
+            const text = cell.textContent.trim();
+            const formattedText = text.split(',').map(item => item.trim()).join('<br>');
+            cell.innerHTML = formattedText;
+        });
+        
+        const headers = document.querySelectorAll('thead th');
+        headers.forEach(header => {
+            header.setAttribute('title', 'Click to sort');
+            header.style.cursor = 'pointer';
+        });
+    });
+</script>
+{% endblock %}

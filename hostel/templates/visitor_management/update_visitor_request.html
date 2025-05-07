@@ -1,0 +1,46 @@
+!-- update_visitor_request.html -->
+{% extends 'base.html' %}
+
+{% block title %}Update Visitor Request{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Update Visitor Request</h1>
+        <p class="mt-2 text-gray-600">Review and update the visitor request status</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Visitor Name</label>
+                    <p class="mt-1 text-lg text-gray-900">{{ visitor.Visitor_Name }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Contact Info</label>
+                    <p class="mt-1 text-lg text-gray-900">{{ visitor.Contact_Info }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Time In</label>
+                    <p class="mt-1 text-lg text-gray-900">{{ visitor.Time_in|date:"M d, Y H:i" }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Time Out</label>
+                    <p class="mt-1 text-lg text-gray-900">{{ visitor.Time_out|date:"M d, Y H:i" }}</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="action" value="accept">Accept</button>
+                <button type="submit" name="action" value="reject">Reject</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

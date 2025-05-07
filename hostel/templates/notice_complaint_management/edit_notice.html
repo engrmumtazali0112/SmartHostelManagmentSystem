@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Notice{% endblock %}
+
+{% block content %}
+<div class="content-wrapper py-4">
+    <div class="container-fluid">
+        {% if messages %}
+        <div class="messages mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'danger' %}fa-exclamation-circle{% elif message.tags == 'info' %}fa-info-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% endif %} mr-2"></i>
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        
+            
+            <div class="notice-body">
+                <form method="post" action="{% url 'edit_notice' notice.Notice_ID %}">
+                    {% csrf_token %}
+                    <div class="form-group mb-4">
+                        <label for="title" class="form-label">Title<span class="required-asterisk">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" required value="{{ notice.Title }}" placeholder="Enter notice title">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="content" class="form-label">Content<span class="required-asterisk">*</span></label>
+                        <textarea class="form-control" id="content" name="content" rows="6" required placeholder="Enter notice content">{{ notice.Content }}</textarea>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="expiry_date" class="form-label">Expiry Date</label>
+                        <input type="date" class="form-control" id="expiry_date" name="expiry_date" 
+                               value="{% if notice.Expiry_Date %}{{ notice.Expiry_Date|date:'Y-m-d' }}{% endif %}">
+                        <small class="form-text">Leave blank if notice should not expire</small>
+                    </div>
+                    <div class="form-group mb-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" 
+                                   {% if notice.Is_Active %}checked{% endif %}>
+                            <label class="custom-control-label" for="is_active">Active</label>
+                        </div>
+                        <small class="form-text">Inactive notices won't be displayed on the dashboard</small>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary btn-save">
+                            <i class="fas fa-save mr-2"></i> Update Notice
+                        </button>
+                        <a href="{% url 'view_notice' notice.Notice_ID %}" class="btn btn-cancel">
+                            <i class="fas fa-times mr-2"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Internal CSS -->
+<style>
+    /* Custom styles for the notice edit page */
+    .notice-edit-wrapper {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+    
+    .notice-header {
+        background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 8px 8px 0 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .notice-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(rgba(255, 255, 255, 0.2), transparent 70%);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+    
+    .notice-body {
+        padding: 2rem;
+        background-color: white;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    .page-title {
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-title i {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+    }
+    
+    .custom-breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+    
+    .custom-breadcrumb .breadcrumb-item a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    
+    .custom-breadcrumb .breadcrumb-item a:hover {
+        color: white;
+    }
+    
+    .custom-breadcrumb .breadcrumb-item.active {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .custom-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .form-control {
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    textarea.form-control {
+        min-height: 150px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+    
+    .required-asterisk {
+        color: #dc3545;
+        margin-left: 4px;
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn-save {
+        background: linear-gradient(to right, #0d6efd, #0b5ed7);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+    }
+    
+    .btn-save:hover {
+        background: linear-gradient(to right, #0b5ed7, #0a58ca);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(13, 110, 253, 0.3);
+    }
+    
+    .btn-cancel {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #6c757d;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #e9ecef;
+        color: #495057;
+    }
+    
+    .custom-switch .custom-control-label::before {
+        width: 2.5rem;
+        height: 1.25rem;
+        border-radius: 1rem;
+    }
+    
+    .custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .custom-switch .custom-control-label::after {
+        top: calc(0.25rem + 2px);
+        left: calc(-2.5rem + 2px);
+        width: calc(1.25rem - 4px);
+        height: calc(1.25rem - 4px);
+        border-radius: 50%;
+    }
+    
+    .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+        transform: translateX(1.25rem);
+    }
+    
+    .custom-switch .custom-control-input:focus ~ .custom-control-label::before {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .alert {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .alert-success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #842029;
+    }
+    
+    .alert-info {
+        background-color: #cff4fc;
+        color: #055160;
+    }
+    
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #664d03;
+    }
+    
+    /* Animation for alerts */
+    @keyframes slideInDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .alert {
+        animation: slideInDown 0.3s ease-out forwards;
+    }
+</style>
+{% endblock %}

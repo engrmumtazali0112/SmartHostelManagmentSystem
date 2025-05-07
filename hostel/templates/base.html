@@ -1,0 +1,458 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hostel Management System{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/showcase_notice.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin_showcasenotices.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block extra_css %}{% endblock %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --sidebar-width: 280px;
+            --header-height: 64px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+        }
+        .navbar {
+            height: var(--header-height);
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0; /* Fix to extend to bottom */
+            background: white;
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 1rem;
+            overflow-y: auto; /* Enable scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-content {
+            flex: 1;
+            min-height: min-content; /* Ensure content can be smaller than viewport */
+        }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .sidebar-link:hover {
+            background: var(--background-color);
+            color: var(--primary-color);
+        }
+        .sidebar-link i {
+            width: 1.5rem;
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+        .sidebar-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #ef4444;
+            color: white;
+            margin-left: 0.5rem;
+        }
+        /* Dropdown styles */
+        .dropdown-menu {
+            display: none;
+            padding-left: 2.5rem;
+            margin-top: -0.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .dropdown-item:hover {
+            background: var(--background-color);
+            color: var(--primary-color);
+        }
+        .dropdown-toggle::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: auto;
+            transition: transform 0.2s;
+        }
+        .dropdown-toggle.show::after {
+            transform: rotate(180deg);
+        }
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+        /* Add bottom margin to last items to ensure they're visible when scrolling */
+        .sidebar-link:last-child,
+        .dropdown-menu:last-child .dropdown-item:last-child {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a class="navbar-brand" href="{% if user.is_authenticated and user.student %}{% url 'student_dashboard' %}{% elif user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}">
+            <i class="fas fa-building"></i>
+            HMS
+        </a>
+    </nav>
+
+    <div class="sidebar">
+        <div class="sidebar-content">
+            {% if user.is_authenticated %}
+                {% if user.student %}
+                    <a href="{% url 'student_dashboard' %}" class="sidebar-link">
+                        <i class="fas fa-user-circle"></i> Student Dashboard
+                    </a>
+                    <a href="{% url 'submit_complaint' %}" class="sidebar-link">
+                        <i class="fas fa-comment-dots"></i> Add Complaint
+                    </a>
+                    
+                    <a href="{% url 'student_notices' %}" class="sidebar-link">
+                        <i class="fas fa-bell"></i> Notice Board
+                    </a>
+                    <a href="{% url 'student_showcase_notices' %}" class="sidebar-link">
+                        <i class="fas fa-exclamation-triangle"></i> Disciplinary Notices
+                        {% if student_unread_showcase_notices > 0 %}
+                        <span class="badge">{{ student_unread_showcase_notices }}</span>
+                        {% endif %}
+                    </a>
+
+                 
+                    <!-- Student Mess Management Dropdown -->
+                    <div class="sidebar-dropdown">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <i class="fas fa-utensils"></i> Mess Management
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'apply_for_mess' %}" class="dropdown-item">
+                                <i class="fas fa-clipboard-list"></i> Apply for Mess
+                            </a>
+                            <a href="{% url 'mess_menu' %}" class="dropdown-item">
+                                <i class="fas fa-clipboard-list"></i> Mess Menu
+                            </a>
+                            <a href="{% url 'mess_status' %}" class="dropdown-item">
+                                <i class="fas fa-clipboard-list"></i> Mess Status
+                            </a>
+                            <a href="{% url 'mess_attendance' %}" class="dropdown-item">
+                                <i class="fas fa-check-square"></i> Attendance
+                            </a>
+                            <a href="{% url 'mess_bill' %}" class="dropdown-item">
+                                <i class="fas fa-file-invoice-dollar"></i> Mess Bill
+                            </a>
+                            <a href="{% url 'mess_account_book' %}" class="dropdown-item"> 
+                                <i class="fas fa-file-invoice-dollar"></i> Mess Account Book  
+                            </a>
+                            
+                           
+                        </div>
+                    </div>
+                    <!-- Visitor Management Dropdown -->
+                    <div class="sidebar-dropdown">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <i class="fas fa-user-check"></i> Visitor Requests
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <!-- Link to Request Visitor -->
+                            <a href="{% url 'request_visitor' %}" class="dropdown-item">
+                                <i class="fas fa-user-check"></i> Visitor Request
+                            </a>
+                            <!-- Link to All Student Visitor Request History -->
+                            <a href="{% url 'std_request_history' %}" class="dropdown-item">
+                                <i class="fas fa-history"></i> Visitor Request History
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Visitor Management Section for Student -->
+                   
+                    {% if user.is_authenticated and user.student %}
+                    <div class="sidebar-dropdown">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <i class="fas fa-credit-card"></i> Payment Management <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'account_book' %}" class="dropdown-item">
+                                <i class="fas fa-wallet"></i>H Account Book
+                            </a>
+                            <a href="{% url 'add_payment' %}" class="dropdown-item">
+                                <i class="fas fa-upload"></i>H Add Payment
+                            </a>
+                            <a href="{% url 'mess_account_book' %}" class="dropdown-item">
+                                <i class="fas fa-wallet"></i>Mess Account Book
+                            </a>
+                            <a href="{% url 'payment_request_form' %}" class="dropdown-item">
+                                <i class="fas fa-upload"></i>Mess Add Payment
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'std_profile' %}" class="sidebar-link">
+                        <i class="fas fa-user-circle"></i> My Profile
+                    </a>
+                    <a href="{% url 'logout' %}" class="sidebar-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+
+                {% else %}
+                    <a href="{% url 'dashboard' %}" class="sidebar-link">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{% url 'list_students' %}" class="sidebar-link">
+                        <i class="fas fa-users"></i> Students
+                    </a>
+                    <a href="{% url 'list_hostels' %}" class="sidebar-link">
+                        <i class="fas fa-building"></i> Hostels
+                    </a>
+                    <a href="{% url 'list_rooms' %}" class="sidebar-link">
+                        <i class="fas fa-bed"></i> Rooms
+                    </a>
+                    <!-- For Student Sidebar -->
+
+                    <!-- For Admin Sidebar -->
+                {% if user.is_authenticated and user.is_staff %}
+                <div class="sidebar-dropdown">
+                    <a href="#" class="sidebar-link dropdown-toggle">
+                        <i class="fas fa-exclamation-triangle"></i> Disciplinary Notices
+                        {% if unread_showcase_notices > 0 %}
+                        <span class="badge">{{ unread_showcase_notices }}</span>
+                        {% endif %}
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'admin_showcase_notices' %}" class="dropdown-item">
+                            <i class="fas fa-list"></i> All Notices
+                        </a>
+                        <a href="{% url 'create_showcase_notice' %}" class="dropdown-item">
+                            <i class="fas fa-plus"></i> Create Notice
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+               
+                    <!-- For Staff/Admin Sidebar -->
+                    
+                    {% if user.is_authenticated and user.is_staff %}
+                    <div class="sidebar-dropdown">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <i class="fas fa-credit-card"></i> Student Payment 
+                            <i class="fas fa-chevron-down"></i>
+                            {% if unread_payment_requests > 0 %}
+                            <span class="badge">{{ unread_payment_requests }}</span>  <!-- Show unread count -->
+                            {% endif %}
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'account_book' %}" class="dropdown-item">
+                                <i class="fas fa-clipboard-list"></i> Hostel Payment
+                            </a>
+                            <a href="{% url 'admin_payment_requests' %}" class="dropdown-item">
+                                <i class="fas fa-users"></i>Mess Payment Request
+                            </a>
+                            
+                        </div>
+                    </div>
+                    {% endif %} 
+                    <!-- Staff Mess Management Dropdown -->
+                    {% if user.is_staff %}
+                        <div class="sidebar-dropdown">
+                            <a href="#" class="sidebar-link dropdown-toggle">
+                                <i class="fas fa-utensils"></i> Mess Management <i class="fas fa-chevron-down"></i>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'mess_request' %}" class="dropdown-item">
+                                    <i class="fas fa-clipboard-list"></i> Mess Request
+                                </a>
+                                <a href="{% url 'admin_mess_management' %}" class="dropdown-item">
+                                    <i class="fas fa-users"></i> Active Mess Memberships
+                                </a>
+                                <a href="{% url 'mess_menu' %}" class="dropdown-item">
+                                    <i class="fas fa-clipboard-list"></i> Mess Menu
+                                </a>
+                                <a href="{% url 'add_mess_menu' %}" class="dropdown-item">
+                                    <i class="fas fa-plus"></i> Add Mess Menu
+                                </a>
+                                <a href="{% url 'manage_attendance' %}" class="dropdown-item">
+                                    <i class="fas fa-users"></i> View All Attendance
+                                </a>
+                                
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <a href="{% url 'list_complaints' %}" class="sidebar-link">
+                        <i class="fas fa-exclamation-circle"></i> Complaints
+                        {% if unread_complaints > 0 %}
+                            <span class="badge">{{ unread_complaints }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'list_of_notices' %}" class="sidebar-link">
+                        <i class="fas fa-bullhorn"></i> Notices
+                    </a>
+                    <a href="{% url 'admin_manage_visitor_requests' %}" class="sidebar-link">
+                        <i class="fas fa-user-check"></i> Visitor Management
+                    </a>
+
+                    <a href="{% url 'logout' %}" class="sidebar-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}" class="sidebar-link">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+    {% block extra_js %}{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Single event listener for dropdown toggles
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent the default link behavior
+                    
+                    // Close other dropdowns first
+                    document.querySelectorAll('.dropdown-toggle').forEach(otherToggle => {
+                        if (otherToggle !== toggle) {
+                            otherToggle.classList.remove('show');
+                            if (otherToggle.nextElementSibling) {
+                                otherToggle.nextElementSibling.classList.remove('show');
+                            }
+                        }
+                    });
+                    
+                    // Toggle the 'show' class on the dropdown toggle
+                    this.classList.toggle('show');
+                    
+                    // Toggle the 'show' class on the dropdown menu
+                    const dropdownMenu = this.nextElementSibling;
+                    dropdownMenu.classList.toggle('show');
+                });
+            });
+            
+            // Add active class to current sidebar link
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.sidebar-link, .dropdown-item').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                    
+                    // If it's a dropdown item, show its parent dropdown
+                    const parentDropdown = link.closest('.dropdown-menu');
+                    if (parentDropdown) {
+                        parentDropdown.classList.add('show');
+                        const parentToggle = parentDropdown.previousElementSibling;
+                        if (parentToggle && parentToggle.classList.contains('dropdown-toggle')) {
+                            parentToggle.classList.add('show');
+                        }
+                    }
+                }
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
+                    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                        toggle.classList.remove('show');
+                    });
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+
+</body>
+</html>

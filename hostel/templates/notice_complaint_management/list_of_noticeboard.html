@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notices{% endblock %}
+
+{% block content %}
+<!-- Link to external CSS file -->
+<link rel="stylesheet" href="{% static 'css/stylenotice.css' %}">
+
+<!-- Font Awesome if not already in base.html -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Sidebar Toggle Button -->
+<div class="toggle-sidebar" id="toggleSidebar">
+    <i class="fas fa-chevron-left" id="toggleIcon"></i>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    <div class="content-container">
+        <div class="header">
+            <h1 class="page-title"><i class="fas fa-bullhorn"></i> Notice Board</h1>
+            <a href="{% url 'add_notice' %}" class="add-btn">
+                <i class="fas fa-plus"></i>
+                <span>Add New Notice</span>
+            </a>
+        </div>
+
+        <div class="notice-card">
+            <div class="card-header">
+                <h2><i class="fas fa-bullhorn"></i> All Notices</h2>
+            </div>
+            <div class="card-body">
+                <table class="notice-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%">TITLE</th>
+                            <th style="width: 15%">POSTED ON</th>
+                            <th style="width: 15%">EXPIRES</th>
+                            <th style="width: 15%">STATUS</th>
+                            <th style="width: 15%">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for notice in notices %}
+                        <tr>
+                            <td>{{ notice.Title }}</td>
+                            <td>{{ notice.Created_At|date:"Y-m-d" }}</td>
+                            <td>
+                                {% if notice.Expiry_Date %}
+                                {{ notice.Expiry_Date|date:"Y-m-d" }}
+                                {% else %}
+                                <span>No expiry</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if notice.Is_Active %}
+                                <span class="badge badge-active">Active</span>
+                                {% else %}
+                                <span class="badge badge-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'view_notice' notice.Notice_ID %}" class="action-btn view-btn" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    {% if user.is_staff %}
+                                    <a href="{% url 'edit_notice' notice.Notice_ID %}" class="action-btn edit-btn" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'delete_notice' notice.Notice_ID %}" class="action-btn delete-btn" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <i class="fas fa-clipboard"></i>
+                                    <p>No notices available at the moment.</p>
+                                    <a href="{% url 'add_notice' %}" class="add-btn">
+                                        <i class="fas fa-plus"></i> Add Your First Notice
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

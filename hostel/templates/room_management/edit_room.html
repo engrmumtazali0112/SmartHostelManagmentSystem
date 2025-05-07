@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Room{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="form-title">Edit Room</h2>
+            <p class="form-subtitle">Update room details and configuration</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Room No</label>
+                    <input type="text" class="form-control" name="room_no" value="{{ room.Room_No }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Room Type</label>
+                    <select class="form-control" name="room_type" required>
+                        <option value="One Seater" {% if room.Room_Type == 'One Seater' %}selected{% endif %}>One Seater</option>
+                        <option value="Two Seater" {% if room.Room_Type == 'Two Seater' %}selected{% endif %}>Two Seater</option>
+                        <option value="Three Seater" {% if room.Room_Type == 'Three Seater' %}selected{% endif %}>Three Seater</option>
+                        <option value="Four Seater" {% if room.Room_Type == 'Four Seater' %}selected{% endif %}>Four Seater</option>
+                        <option value="Five Seater" {% if room.Room_Type == 'Five Seater' %}selected{% endif %}>Five Seater</option>
+                        <option value="Six Seater" {% if room.Room_Type == 'Six Seater' %}selected{% endif %}>Six Seater</option>
+                        <option value="Seven Seater" {% if room.Room_Type == 'Seven Seater' %}selected{% endif %}>Seven Seater</option>
+                        <option value="Eight Seater" {% if room.Room_Type == 'Eight Seater' %}selected{% endif %}>Eight Seater</option>
+                        <option value="Nine Seater" {% if room.Room_Type == 'Nine Seater' %}selected{% endif %}>Nine Seater</option>
+                        <option value="Ten Seater" {% if room.Room_Type == 'Ten Seater' %}selected{% endif %}>Ten Seater</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Capacity</label>
+                    <input type="number" class="form-control" name="capacity" value="{{ room.Capacity }}" min="1" max="10" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Floor No</label>
+                    <input type="number" class="form-control" name="floor_no" value="{{ room.Floor_No }}" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-control" name="location" value="{{ room.Location }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Students Alloted</label>
+                    <input type="number" class="form-control" name="students_alloted" value="{{ room.Students_Alloted }}" min="0" required>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="form-button btn-primary">Update Room</button>
+                <a href="{% url 'list_rooms' %}" class="form-button btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-title {
+        font-size: 2em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .form-subtitle {
+        font-size: 1.1em;
+        color: #777;
+    }
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 1em;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .form-button {
+        padding: 10px 20px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+{% endblock %}

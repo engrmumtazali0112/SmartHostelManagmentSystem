@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Edit Disciplinary Notice</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.notice_type|as_crispy_field }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.fine_amount|as_crispy_field }}
+                    </div>
+                </div>
+                
+                {{ form.description|as_crispy_field }}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.due_date|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Select Students</h6>
+                    </div>
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                        {{ form.students|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Notice
+                    </button>
+                    <a href="{% url 'admin_showcase_notices' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Enhanced Select2 for students with better formatting
+        $("#id_students").select2({
+            placeholder: "Search students by name or registration number",
+            allowClear: true,
+            minimumInputLength: 2,
+            width: '100%',
+            templateResult: formatStudentResult,
+            templateSelection: formatStudentSelection
+        });
+        
+        // Format the student results in dropdown
+        function formatStudentResult(student) {
+            if (!student.id) return student.text;
+            
+            // Extract student info
+            var studentInfo = $(student.element).text();
+            
+            // Create a better display format
+            var $result = $(
+                '<div class="student-result">' +
+                    '<div><strong>' + studentInfo + '</strong></div>' +
+                '</div>'
+            );
+            
+            return $result;
+        }
+        
+        // Format the selected students
+        function formatStudentSelection(student) {
+            if (!student.id) return student.text;
+            return $(student.element).text();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitor Requests{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Your Visitor Requests</h1>
+  
+  {% if visitor_requests %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead>
+          <tr class="bg-blue-600 text-white">
+            <th class="px-6 py-3 text-left uppercase tracking-wider">Visitor Name</th>
+            <th class="px-6 py-3 text-left uppercase tracking-wider">Contact Info</th>
+            <th class="px-6 py-3 text-left uppercase tracking-wider">Time In</th>
+            <th class="px-6 py-3 text-left uppercase tracking-wider">Time Out</th>
+            <th class="px-6 py-3 text-left uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left uppercase tracking-wider">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for visitor_request in visitor_requests %}
+            <tr class="hover:bg-gray-100">
+              <td class="px-6 py-4 whitespace-nowrap">{{ visitor_request.visitor.name }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ visitor_request.visitor.contact_info }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ visitor_request.time_in|date:"Y-m-d H:i" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ visitor_request.time_out|date:"Y-m-d H:i" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if visitor_request.status == "Accepted" %}
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Accepted
+                  </span>
+                {% elif visitor_request.status == "Rejected" %}
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                    Rejected
+                  </span>
+                {% else %}
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    Pending
+                  </span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if visitor_request.status == "Pending" %}
+                  <a href="{% url 'update_visitor_request' visitor_request.id %}" class="text-blue-600 hover:text-blue-800 font-medium">
+                    Update
+                  </a>
+                {% else %}
+                  <span class="text-gray-500">-</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-gray-600">No visitor requests found.</p>
+  {% endif %}
+</div>
+{% endblock %}

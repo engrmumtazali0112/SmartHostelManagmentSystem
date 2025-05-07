@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-2xl font-bold mb-6">Tea Break Attendance</h1>
+
+    <!-- Search Bar for Date Filtering -->
+    <div class="mb-4">
+        <form method="get">
+            <div class="flex items-center">
+                <label for="date" class="mr-2 text-sm font-medium text-gray-700">Search by Date:</label>
+                <input type="date" id="date" name="date" class="py-2 px-4 border border-gray-300 rounded-md" value="{{ request.GET.date }}">
+                <button type="submit" class="ml-4 bg-blue-500 text-white py-2 px-4 rounded-md">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <ul class="flex border-b">
+        <li class="mr-1">
+            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold {% if request.path == '/breakfast-attendance/' %}bg-gray-200{% endif %}" href="{% url 'breakfast_attendance' %}">Breakfast</a>
+        </li>
+        <li class="mr-1">
+            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold {% if request.path == '/lunch-attendance/' %}bg-gray-200{% endif %}" href="{% url 'lunch_attendance' %}">Lunch</a>
+        </li>
+        <li class="-mb-px mr-1">
+            <a class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold {% if request.path == '/tea-break-attendance/' %}bg-gray-200{% endif %}" href="{% url 'tea_break_attendance' %}">Tea Break</a>
+        </li>
+        <li class="mr-1">
+            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold {% if request.path == '/dinner-attendance/' %}bg-gray-200{% endif %}" href="{% url 'dinner_attendance' %}">Dinner</a>
+        </li>
+    </ul>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        {% if tea_break_records %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">Student</th>
+                        <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">Date</th>
+                        <th class="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">Present</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendance in tea_break_records %}
+                        <tr>
+                            <td class="py-2 px-4 border-b border-gray-200">{{ attendance.student.F_Name }} {{ attendance.student.L_Name }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">{{ attendance.date|date:"M d, Y" }}</td>
+                            <td class="py-2 px-4 border-b border-gray-200">
+                                {% if attendance.is_present %}
+                                    <span class="text-green-600">Present</span>
+                                {% else %}
+                                    <span class="text-red-600">Absent</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-gray-500">No attendance records for Tea Break.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

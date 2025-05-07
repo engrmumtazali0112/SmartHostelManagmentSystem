@@ -1,0 +1,9 @@
+
+
+# Ignore AppData
+AppData/
+*.log
+*.
+*.cache
+node_modules/
+.env

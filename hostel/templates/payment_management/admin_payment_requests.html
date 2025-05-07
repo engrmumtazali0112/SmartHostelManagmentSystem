@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* General container styling */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Card styling */
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background-color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    /* Table styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-top: 20px;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        color: #333;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        color: #4CAF50;
+        font-weight: bold;
+    }
+
+    .table td {
+        background-color: #f9f9f9;
+    }
+
+    .table tr:hover {
+        background-color: #e9f7e2;
+    }
+
+    /* Button styling */
+    .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .btn-success {
+        background-color: #4CAF50;
+    }
+
+    .btn-success:hover {
+        background-color: #45a049;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+
+        .card-header {
+            font-size: 20px;
+        }
+
+        .table th, 
+        .table td {
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        .btn {
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .card {
+            padding: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 5px;
+            margin-right: 0;
+        }
+        
+        td .btn {
+            display: block;
+        }
+
+        .table {
+            font-size: 12px;
+        }
+    }
+</style>
+
+<!-- Main payment requests list page -->
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Pending Payment Requests</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Transaction ID</th>
+                        <th>Amount</th>
+                        <th>Bank</th>
+                        <th>Date</th>
+                        <th>Views</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in payment_requests %}
+                    <tr>
+                        <td>{{ request.student.F_Name }} {{ request.student.L_Name }}</td>
+                        <td>{{ request.transaction_id }}</td>
+                        <td>Rs{{ request.amount }}</td>
+                        <td>{{ request.bank_name }}</td>
+                        <td>{{ request.transaction_date }}</td>
+                        <td>
+                            <a href="{% url 'view_payment_request' request.id %}" class="btn btn-info btn-sm">View</a>
+                        </td>
+                        <td>
+                            <!-- Update this form to use the correct URL -->
+                            <form method="post" action="{% url 'process_payment_request' request.id %}">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                                <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">No pending payment requests.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

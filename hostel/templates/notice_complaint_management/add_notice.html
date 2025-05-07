@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Notice{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <!-- Alert message (optional) -->
+    <div class="alert alert-success">
+        You're creating a new notice. All fields marked with * are required.
+        <button type="button" class="close" onclick="this.parentElement.style.display='none'">
+            <span>&times;</span>
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-plus-circle"></i>
+                Create Notice
+            </h3>
+        </div>
+        <div class="card-body">
+            <form id="noticeForm" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Title <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter notice title" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="content" name="content" rows="6" placeholder="Enter notice content..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date (Optional)</label>
+                    <input type="date" class="form-control" id="expiry_date" name="expiry_date">
+                    <small class="form-text">Leave blank if notice should not expire</small>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Notice
+                    </button>
+                    <a href="{% url 'list_of_notices' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #3498db;
+        --primary-dark: #2980b9;
+        --primary-gradient: linear-gradient(135deg, #3498db, #2980b9);
+        --secondary-color: #f4f6f9;
+        --success-color: #2ecc71;
+        --danger-color: #e74c3c;
+        --warning-color: #f39c12;
+        --info-color: #3498db;
+        --text-color: #34495e;
+        --text-muted: #7f8c8d;
+        --border-color: #ecf0f1;
+    }
+
+    .main-content {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .content-header h1 {
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    .breadcrumb {
+        display: flex;
+        list-style: none;
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item {
+        font-size: 14px;
+    }
+
+    .breadcrumb-item a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-muted);
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "/";
+        padding: 0 8px;
+        color: var(--text-muted);
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        border-bottom: none;
+    }
+
+    .card-header .card-title {
+        font-size: 18px;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .card-header i {
+        margin-right: 10px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    .form-group .text-danger {
+        color: var(--danger-color);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-text {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 5px;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn i {
+        margin-right: 8px;
+    }
+
+    .btn-primary {
+        background: var(--primary-gradient);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #2980b9, #2473a6);
+        box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background-color: #95a5a6;
+        color: white;
+        margin-left: 10px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #7f8c8d;
+        box-shadow: 0 4px 10px rgba(127, 140, 141, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        position: relative;
+        animation: fadeIn 0.5s;
+        color: #27ae60;
+        background-color: rgba(46, 204, 113, 0.15);
+        border-left: 4px solid var(--success-color);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .alert .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        color: inherit;
+    }
+    
+    /* Button animations */
+    .btn {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+    
+    .btn:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        20% {
+            transform: scale(25, 25);
+            opacity: 0.3;
+        }
+        100% {
+            opacity: 0;
+            transform: scale(40, 40);
+        }
+    }
+</style>
+
+<script>
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('noticeForm');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            
+            if (!title || !content) {
+                alert('Title and content are required!');
+                return false;
+            }
+            
+            // Submit the form if validation passes
+            this.submit();
+        });
+        
+        // Set minimum date to today
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        const yyyy = today.getFullYear();
+        const todayStr = yyyy + '-' + mm + '-' + dd;
+        document.getElementById('expiry_date').min = todayStr;
+    });
+</script>
+{% endblock %}
