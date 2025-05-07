@@ -184,12 +184,12 @@ A comprehensive solution for managing hostel operations, including room allocati
 - MySQL: [Install MySQL](https://mysql.com)
 
 ### Installation Steps
-
+### Stripe Payment Gate way API Steps
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/Hostel-Management-System.git
-cd Hostel-Management-System
+git clone https://github.com/engrmumtazali0112/SmartHostelManagmentSystem_FYP.git
+cd SmartHostelManagmentSystem_FYP
 ```
 
 2. Install dependencies:
@@ -201,6 +201,10 @@ pip install -r requirements.txt
 3. Set up the database:
 
 ```bash
+python manage.py migrations
+```
+
+```bash
 python manage.py migrate
 ```
 
@@ -209,6 +213,64 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+# Stripe Payment Gateway API Integration for Django
+
+## Overview
+This guide explains how to integrate the Stripe payment gateway into your Django application. It covers setting up your Stripe account, installing necessary libraries, and processing payments securely within Django.
+
+## Steps to Integrate Stripe API with Django
+
+### 1. **Create a Stripe Account**
+   - Sign up at [Stripe](https://stripe.com) and log in to your Dashboard.
+
+### 2. **Install Stripe SDK in Django**
+   - Install the Stripe Python library using pip:
+     ```bash
+     pip install stripe
+     ```
+
+### 3. **Get Your Stripe API Keys**
+   - Go to **Developers > API keys** in the Stripe Dashboard.
+   - Copy your **Publishable Key** (used on the front-end) and **Secret Key** (used on the back-end).
+
+### 4. **Configure Stripe API Keys in Django**
+   - In your Django project, store the API keys in the **settings.py** file (never hardcode sensitive data in your code).
+     ```python
+     # settings.py
+     STRIPE_TEST_PUBLIC_KEY = 'your-publishable-key-here'
+     STRIPE_TEST_SECRET_KEY = 'your-secret-key-here'
+     ```
+   - Use **django-environ** or a similar method to load sensitive keys from environment variables.
+
+
+  
+
+### 6. **Handle Payment Token on Back-End (Django View)**
+   - In your Django view, handle the POST request and create a charge using Stripe's API. Here’s an example using Django’s `JsonResponse` and Stripe's charge creation:
+     ```python
+     import stripe
+     from django.conf import settings
+     from django.http import JsonResponse
+
+     # Set your secret key
+     stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
+
+     def charge(request):
+         if request.method == "POST":
+             try:
+                 token = request.POST['token']
+                 charge = stripe.Charge.create(
+                     amount=5000,  # Amount in cents
+                     currency='usd',
+                     source=token,
+                     description='Test payment'
+                 )
+                 return JsonResponse({'status': 'success', 'charge': charge})
+             except stripe.error.StripeError as e:
+                 return JsonResponse({'status': 'error', 'message': str(e)})
+
+         return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+     ```
 
 ## 👥 Contributors
 
