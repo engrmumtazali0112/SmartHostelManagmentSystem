@@ -1077,3 +1077,15 @@ class StripePayment(models.Model):
             return f"Spring-{current_year + year_offset + 1}"
         
         
+
+from django.db import models
+
+class FeeReminder(models.Model):
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    reminder_message = models.TextField()
+    due_date = models.DateField()
+    sent_date = models.DateField(null=True, blank=True)
+    is_sent = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Reminder for {self.student} due on {self.due_date}"

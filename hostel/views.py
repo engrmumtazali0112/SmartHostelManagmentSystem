@@ -11,16 +11,16 @@ from datetime import datetime, timedelta, date
 from decimal import Decimal
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
-import stripe
-# At the top of your views.py file
-from itertools import groupby
-from operator import itemgetter
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import MessPaymentRequest
 
-from itertools import groupby
-from operator import itemgetter
+# Stripe payment imports
+import stripe
+
+from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import PageNotAnInteger
+from django.core.mail import send_mail
+# Removed FeeReminder import if it's not needed
 
 # ReportLab imports for document generation and styling
 from reportlab.lib.pagesizes import letter
@@ -30,68 +30,17 @@ from reportlab.platypus import TableStyle
 from reportlab.lib import colors
 
 # Django imports for pagination
-from django.core.paginator import EmptyPage
+from django.core.paginator import EmptyPage, Paginator
 
 # CSV functionality import
 import csv
 
-
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
-from .models import Room, Hostel, RoomType
-from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib import messages
-from django.utils import timezone
-from django.db.models import Count, Q
-from .models import ShowcaseNotice, StudentShowcaseNotice  # Corrected import
-from hostel.models import Student
+# Application-specific imports
+from .models import Room, Hostel, RoomType, Student, MessPaymentRequest, ShowcaseNotice, StudentShowcaseNotice, StripePayment, Payment, NoticeBoard
 from .forms import ShowcaseNoticeForm  # Assuming you have a form for ShowcaseNotice
-from django.http import HttpResponse
 
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from .models import Hostel  # Ensure you have the correct import for Hostel
-
-# views.py
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from .models import Hostel, RoomType  # Import necessary models
-
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from .models import Hostel, RoomType  # Import Hostel and RoomType models
-
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from .models import Hostel, RoomType  # Import Hostel and RoomType models
-
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from .models import Hostel
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.db.models import Q, Sum
-from .models import Room, RoomType, Hostel, Student
-from decimal import Decimal
-from .models import RoomType, Hostel, Room  # Import RoomType and other models
+# Error handling imports
 from django.core.exceptions import ValidationError  # Import ValidationError
-
-from django.conf import settings
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.contrib import messages
-from django.views.decorators.csrf import csrf_exempt
-from .models import Student, StripePayment, Payment
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .models import NoticeBoard
 
 # Models
 from .models import MessMenu, MessAttendance, MessBill, MessPayment, MessPaymentRequest, MessMembership, ShowcaseNotice, Student, Admin, VisitorRequest, Profile, Visitor, Room, Hostel, Fingerprint, MessRequest
@@ -108,6 +57,7 @@ from .forms import *
 from .forms import  MessMembershipForm
 from django.db import IntegrityError
 from .models import Complaint, Payment
+from .models import FeeReminder  # or wherever FeeReminder is defined
 
 # Define PAYMENT_STATUS_CHOICES if not already defined
 PAYMENT_STATUS_CHOICES = [
@@ -4254,11 +4204,6 @@ def search_students(request):
         ]
     
     return JsonResponse({'students': students})
-
-# ===========================
-# Finger Print Management Of Student
-# enrol finger print
-# ===========================
 
 
 # ==========================
