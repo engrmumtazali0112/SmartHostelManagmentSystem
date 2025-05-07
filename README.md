@@ -13,62 +13,75 @@ A comprehensive solution for managing hostel operations, including room allocati
 ### Admin Dashboard and Management
 
 ![AdminAddMessMenu](Demo/Screenshot/AdminAddMessMenu.png)
+
 - Admin adds new menu items in the hostel mess system.
 
 ![AdminAddShowcaseNotice](Demo/Screenshot/AdminaddShowcasenotice.png)
+
 - Admin can showcase notices related to hostel management.
 
 ![AdminComplaint](Demo/Screenshot/AdminComplaint.png)
+
 - Admin manages complaints received from students.
 
 ![AdminRoomList](Demo/Screenshot/AdminRoomList.png)
+
 - Admin manages room listings for the hostel.
 
 ### Hostel Management Features
 
 ![AdminDashboard](Demo/Screenshot/AdminDashboard.png)
+
 - The main dashboard showcasing hostel and student data.
 
 ![AdminHostel](Demo/Screenshot/AdminHostel.png)
+
 - Admin oversees hostel assignments and management.
 
 ![AdminMessMemberShip](Demo/Screenshot/AdminMessMemberShip.png)
+
 - Manage mess membership and attendance for students.
 
 ### Student Requests and Management
 
 ![AdminStudentFeeManage](Demo/Screenshot/AdminStudentFeeManage.png)
+
 - Admin manages the student fee structure.
 
 ![AdminStudentPaymentRequest](Demo/Screenshot/AdminStudentPaymentRequest.png)
+
 - Handles requests related to student payments.
 
 ![AdminVisitorManagement](Demo/Screenshot/AdminVisitorManagement.png)
+
 - Admin manages visitor records and entries.
 
 ### Student Dashboard
 
 ![StudentDashboard](Demo/Screenshot/StudentDashboard.png)
+
 - Student's personalized dashboard for tracking their activities.
 
 ![StdProfile](Demo/Screenshot/StdProfile.png)
+
 - Students can view and update their personal profile information.
 
 ![StdRequestPaymenthistory](Demo/Screenshot/StdRequestPaymenthistory.png)
+
 - Students can view their payment history and request payments.
 
 ### Miscellaneous
 
 ![StdComplaints](Demo/Screenshot/StdComplaints.png)
+
 - Students can submit complaints through this interface.
 
 ![SubmitComplaints](Demo/Screenshot/SubmitComplaints.png)
+
 - Interface for submitting complaints.
 
-
-
-
 ## 🌟 Features
+
 - **Room and Hostel Management**: Efficient room allocation and hostel administration
 - **Automated Notifications**: Mess bill notifications sent automatically
 - **Biometric Attendance Integration**: Seamless attendance tracking using biometric systems
@@ -77,7 +90,9 @@ A comprehensive solution for managing hostel operations, including room allocati
 - **Communication Tools**: Enhanced communication between students and administrators
 
 ## 📱 Modules
+
 ### Core Modules
+
 - 🏠 **Room Management**: Allocation and tracking of room assignments
 - 🍽️ **Mess Management**: Handling of mess bills, notifications, and student participation
 - 📝 **Complaint System**: A system to submit and manage student complaints
@@ -89,7 +104,9 @@ A comprehensive solution for managing hostel operations, including room allocati
 - 📢 **Notice Board**: A digital noticeboard for announcements
 
 ## 📊 Project Progress
+
 ### ✅ Completed
+
 - Database Design (ERD)
 - UML Diagrams:
   - Use Case Diagram
@@ -98,28 +115,33 @@ A comprehensive solution for managing hostel operations, including room allocati
 - System Flow Chart
 
 ### 🚧 Module Implementation Status
+
 #### Completed Modules:
+
 - ✅ Room Management
 - ✅ Payment System
 - ✅ Complaint Management
 
 #### Pending Modules:
+
 - ⏳ Mess Management
 - ⏳ Attendance System
 - ⏳ Visitor Management
 
 ## 🔗 Related Links
+
 - [Requirements Documentation](#)
 - [PPT Slides](#)
 - [Project Files](#)
 
 ## 💻 Technology Stack
+
 - **Backend**: Python/Django
 - **Frontend**: Bootstrap, HTML, CSS
-- **Database**: 
+- **Database**:
   - Development: SQLite
   - Production: PostgreSQL (planned)
-- **Tools/Platforms**: 
+- **Tools/Platforms**:
   - GitHub
   - Docker
   - MySQL
@@ -127,6 +149,7 @@ A comprehensive solution for managing hostel operations, including room allocati
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python: [Install Python](https://python.org)
 - Node.js: [Install Node.js](https://nodejs.org)
 - MySQL: [Install MySQL](https://mysql.com)
@@ -134,25 +157,30 @@ A comprehensive solution for managing hostel operations, including room allocati
 ### Installation Steps
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/Hostel-Management-System.git
 cd Hostel-Management-System
 ```
 
 2. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 3. Set up the database:
+
 ```bash
 python manage.py migrate
 ```
 
 4. Start the development server:
+
 ```bash
 python manage.py runserver
 ```
+
 ## 👥 Contributors
 
 - [Mumtaz Ali](https://github.com/mumtazali)
@@ -160,9 +188,11 @@ python manage.py runserver
 - [Muhammad Abubakar](https://github.com/muhammadabubakar)
 
 ## 📄 License
+
 This project is licensed under the MIT License.
 
 ## 🤝 Contributing
+
 1. Fork the project
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
@@ -170,6 +200,7 @@ This project is licensed under the MIT License.
 5. Open a Pull Request
 
 ## 📝 Recent Updates
+
 - Added Room Management, Payment, and Complaints modules
 - Implemented Add Payment Request and Admin Management features
 - Added support for Biometric Attendance
@@ -179,6 +210,7 @@ This project is licensed under the MIT License.
 
 📜 License
 This repository is licensed under the MIT License.
+
 <p align="center">
   <a href="mailto:engrmumtazali01@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white"/></a>
   <a href="https://www.linkedin.com/in/mumtaz-ali"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/></a>
