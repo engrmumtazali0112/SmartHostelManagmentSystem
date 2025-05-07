@@ -5,8 +5,6 @@ A comprehensive solution for managing hostel operations, including room allocati
 ## 🎥 Demo
 
 
-<details>
-<summary>Click to view Demo</summary>
 
 
 ## 🌟 Features
